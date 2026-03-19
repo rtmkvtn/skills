@@ -2,6 +2,20 @@
 
 A collection of agent skills that extend capabilities across planning, development, and tooling.
 
+## Installation
+
+Install skills interactively — pick which ones you want:
+
+```bash
+npx skills add rtmkvtn/skills
+```
+
+Or install a specific skill directly:
+
+```bash
+npx skills add rtmkvtn/skills/<skill-name>
+```
+
 ## Planning & Design
 
 These skills help you think through problems before writing code.
