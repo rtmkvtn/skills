@@ -5,7 +5,9 @@
       "Bash(python3 -m json.tool)",
       "Read(//Users/fckxyz/.claude/**)",
       "Bash(rm -rf ~/.agents/skills/find-skills ~/.agents/skills/grill-me ~/.agents/skills/improve-codebase-architecture ~/.agents/skills/prd-to-issues ~/.agents/skills/tdd ~/.agents/skills/write-a-prd)",
-      "Read(//Users/fckxyz/.agents/skills/**)"
+      "Read(//Users/fckxyz/.agents/skills/**)",
+      "Bash(ls -d /Users/fckxyz/Documents/projects.nosync/skills/*/SKILL.md 2>/dev/null | sed 's|.*/skills/||;s|/SKILL.md||')",
+      "Bash(git add -A && git diff --cached)"
     ]
   }
 }

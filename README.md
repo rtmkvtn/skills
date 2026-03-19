@@ -98,20 +98,9 @@ These skills help you write, refactor, and fix code.
   npx skills@latest add rtmkvtn/skills/write-a-skill
   ```
 
-- **edit-article** — Edit and improve articles by restructuring sections, improving clarity, and tightening prose.
-
-  ```
-  npx skills@latest add rtmkvtn/skills/edit-article
-  ```
-
 - **ubiquitous-language** — Extract a DDD-style ubiquitous language glossary from the current conversation.
 
   ```
   npx skills@latest add rtmkvtn/skills/ubiquitous-language
   ```
 
-- **obsidian-vault** — Search, create, and manage notes in an Obsidian vault with wikilinks and index notes.
-
-  ```
-  npx skills@latest add rtmkvtn/skills/obsidian-vault
-  ```
