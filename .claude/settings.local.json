@@ -12,9 +12,10 @@
       "Bash(find /Users/fckxyz/Documents/projects.nosync/skills -name \"*.sh\" -o -name \"*.js\" -o -name \"*.ts\" 2>/dev/null | head -20)",
       "Read(//usr/local/bin/**)",
       "Bash(which bd && bd prime --help 2>&1 | head -20)",
-      "Bash(git add install.sh uninstall.sh commit-push/SKILL.md .claude/settings.local.json)",
-      "Bash(git commit -m \"$\\(cat <<'EOF'\nfeat: add install/uninstall scripts\n\n- Added install.sh to symlink skills into ~/.claude/skills/\n- Added uninstall.sh to remove skill symlinks\n- Enhanced commit-push skill with type table and examples\n- Updated local permission settings\nEOF\n\\)\")",
-      "Bash(git push origin HEAD)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push origin HEAD)",
+      "WebSearch"
     ]
   }
 }
