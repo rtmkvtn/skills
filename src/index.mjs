@@ -1,13 +1,14 @@
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { existsSync } from "node:fs";
-import { checkbox, confirm } from "@inquirer/prompts";
+import { checkbox, confirm, select } from "@inquirer/prompts";
 import { fetchSkillList } from "./github.mjs";
 import { installSkills } from "./installer.mjs";
 
 const OWNER = "rtmkvtn";
 const REPO = "skills";
-const SKILLS_DIR = join(homedir(), ".claude", "skills");
+const GLOBAL_SKILLS_DIR = join(homedir(), ".claude", "skills");
+const PROJECT_SKILLS_DIR = join(process.cwd(), ".claude", "skills");
 
 export async function run() {
   // Node version check
@@ -55,9 +56,26 @@ export async function run() {
     return;
   }
 
+  let skillsDir;
+  try {
+    skillsDir = await select({
+      message: "Install scope:",
+      choices: [
+        { name: "Global  (~/.claude/skills/)", value: GLOBAL_SKILLS_DIR },
+        { name: "Project (./.claude/skills/)", value: PROJECT_SKILLS_DIR },
+      ],
+    });
+  } catch (err) {
+    if (err.name === "ExitPromptError") {
+      console.log("\nCancelled.");
+      return;
+    }
+    throw err;
+  }
+
   // Check for existing installs
   const existing = selected.filter((name) =>
-    existsSync(join(SKILLS_DIR, name))
+    existsSync(join(skillsDir, name))
   );
 
   if (existing.length > 0) {
@@ -83,10 +101,10 @@ export async function run() {
     }
   }
 
-  console.log(`\nInstalling ${selected.length} skill(s) to ${SKILLS_DIR}…\n`);
+  console.log(`\nInstalling ${selected.length} skill(s) to ${skillsDir}…\n`);
 
   try {
-    await installSkills(OWNER, REPO, selected, SKILLS_DIR);
+    await installSkills(OWNER, REPO, selected, skillsDir);
   } catch (err) {
     console.error(`\nInstallation failed: ${err.message}`);
     process.exit(1);
