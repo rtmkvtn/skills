@@ -16,7 +16,7 @@ usage() {
 # Build list of skills to install
 skills=()
 if [[ "$1" == "--all" ]]; then
-  for dir in "$REPO_DIR"/*/; do
+  for dir in "$REPO_DIR"/skills/*/; do
     [[ -f "$dir/SKILL.md" ]] && skills+=("$(basename "$dir")")
   done
 else
@@ -26,7 +26,7 @@ fi
 mkdir -p "$SKILLS_DIR"
 
 for skill in "${skills[@]}"; do
-  src="$REPO_DIR/$skill"
+  src="$REPO_DIR/skills/$skill"
 
   if [[ ! -f "$src/SKILL.md" ]]; then
     echo "skip: $skill — no SKILL.md found in $src"

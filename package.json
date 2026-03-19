@@ -1,0 +1,14 @@
+{
+  "name": "claude-skills-picker",
+  "version": "0.1.0",
+  "description": "Interactive picker to install Claude Code skills",
+  "type": "module",
+  "bin": {
+    "claude-skills-picker": "./bin/claude-skills-picker.mjs"
+  },
+  "files": ["bin/", "src/"],
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "@inquirer/prompts": "^7.0.0"
+  }
+}
