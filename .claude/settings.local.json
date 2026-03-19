@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -d /Users/fckxyz/Documents/projects.nosync/skills/*/)",
+      "Bash(python3 -m json.tool)",
+      "Read(//Users/fckxyz/.claude/**)",
+      "Bash(rm -rf ~/.agents/skills/find-skills ~/.agents/skills/grill-me ~/.agents/skills/improve-codebase-architecture ~/.agents/skills/prd-to-issues ~/.agents/skills/tdd ~/.agents/skills/write-a-prd)",
+      "Read(//Users/fckxyz/.agents/skills/**)"
+    ]
+  }
+}
