@@ -1,27 +1,25 @@
 ---
-name: prd-to-issues
-description: Break a PRD into independently-grabbable issues (GitHub or GitLab) using tracer-bullet vertical slices. Use when user wants to convert a PRD to issues, create implementation tickets, or break down a PRD into work items.
+name: prd-to-issues-bd
+description: Break a PRD into independently-grabbable issues using Beads local tracker and tracer-bullet vertical slices. Use when user wants to convert a PRD to local issues, create implementation tickets with Beads, or break down a PRD into work items tracked locally.
 ---
 
-# PRD to Issues
+# PRD to Issues (Beads)
 
-Break a PRD into independently-grabbable issues using vertical slices (tracer bullets).
+Break a PRD into independently-grabbable issues using vertical slices (tracer bullets), tracked locally with Beads.
 
 ## Process
 
-<platform-detection>
-Before running issue commands, detect the hosting platform:
-1. Run `git remote get-url origin`
-2. If URL contains "github.com" → use `gh` CLI
-3. If URL contains "gitlab" → use `glab` CLI
-4. Otherwise → ask the user which platform and CLI to use
-</platform-detection>
+<beads-init>
+Before running any `bd` commands, verify Beads is initialized:
+1. Run `bd list`
+2. If it fails, run `bd init` first to initialize the beads database in this project
+</beads-init>
 
 ### 1. Locate the PRD
 
-Ask the user for the PRD issue number (or URL).
+Ask the user for the PRD issue ID.
 
-If the PRD is not already in your context window, fetch it with the platform CLI's issue view command (with comments).
+If the PRD is not already in your context window, fetch it with `bd show <id> --json`.
 
 ### 2. Explore the codebase (optional)
 
@@ -59,14 +57,14 @@ Iterate until the user approves the breakdown.
 
 ### 5. Create the issues
 
-For each approved slice, create an issue using the platform CLI's issue create command. Use the issue body template below.
+For each approved slice, create a Beads issue. Use `bd create` with `--stdin` for the issue body, passing the template below. Use `-t task` to mark them as tasks.
 
-Create issues in dependency order (blockers first) so you can reference real issue numbers in the "Blocked by" field.
+Create issues in dependency order (blockers first) so you can reference real issue IDs in the "Blocked by" field.
 
 <issue-template>
 ## Parent PRD
 
-#<prd-issue-number>
+<prd-issue-id>
 
 ## What to build
 
@@ -80,7 +78,7 @@ A concise description of this vertical slice. Describe the end-to-end behavior, 
 
 ## Blocked by
 
-- Blocked by #<issue-number> (if any)
+- Blocked by <issue-id> (if any)
 
 Or "None - can start immediately" if no blockers.
 

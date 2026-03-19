@@ -1,6 +1,6 @@
 ---
-name: write-a-prd
-description: Create a PRD through user interview, codebase exploration, and module design, then submit as an issue. Use when user wants to write a PRD, create a product requirements document, or plan a new feature.
+name: write-a-prd-bd
+description: Create a PRD through user interview, codebase exploration, and module design, then submit as a Beads issue using local tracker. Use when user wants to write a PRD, create a product requirements document, or plan a new feature tracked locally with Beads.
 ---
 
 This skill will be invoked when the user wants to create a PRD. You may skip steps if you don't consider them necessary.
@@ -19,15 +19,13 @@ Check with the user that these modules match their expectations. Check with the 
 
 5. Once you have a complete understanding of the problem and solution, use the template below to write the PRD.
 
-<platform-detection>
-Before running issue commands, detect the hosting platform:
-1. Run `git remote get-url origin`
-2. If URL contains "github.com" → use `gh` CLI
-3. If URL contains "gitlab" → use `glab` CLI
-4. Otherwise → ask the user which platform and CLI to use
-</platform-detection>
+<beads-init>
+Before running any `bd` commands, verify Beads is initialized:
+1. Run `bd list`
+2. If it fails, run `bd init` first to initialize the beads database in this project
+</beads-init>
 
-The PRD should be submitted as an issue using the platform CLI's issue create command.
+The PRD should be submitted as a Beads issue using `bd create` with `--stdin` for the body, using `-t task`.
 
 <prd-template>
 

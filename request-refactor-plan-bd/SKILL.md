@@ -1,6 +1,6 @@
 ---
-name: request-refactor-plan
-description: Create a detailed refactor plan with tiny commits via user interview, then file it as an issue. Use when user wants to plan a refactor, create a refactoring RFC, or break a refactor into safe incremental steps.
+name: request-refactor-plan-bd
+description: Create a detailed refactor plan with tiny commits via user interview, then file it as a Beads issue using local tracker. Use when user wants to plan a refactor, create a refactoring RFC, or break a refactor into safe incremental steps tracked locally with Beads.
 ---
 
 This skill will be invoked when the user wants to create a refactor request. You should go through the steps below. You may skip steps if you don't consider them necessary.
@@ -21,15 +21,13 @@ This skill will be invoked when the user wants to create a refactor request. You
 
 8. Create an issue with the refactor plan.
 
-<platform-detection>
-Before running issue commands, detect the hosting platform:
-1. Run `git remote get-url origin`
-2. If URL contains "github.com" → use `gh` CLI
-3. If URL contains "gitlab" → use `glab` CLI
-4. Otherwise → ask the user which platform and CLI to use
-</platform-detection>
+<beads-init>
+Before running any `bd` commands, verify Beads is initialized:
+1. Run `bd list`
+2. If it fails, run `bd init` first to initialize the beads database in this project
+</beads-init>
 
-Use the platform CLI's issue create command with the following template for the issue description:
+Use `bd create` with `--stdin` for the body, using `-t task`, with the following template for the issue description:
 
 <refactor-plan-template>
 

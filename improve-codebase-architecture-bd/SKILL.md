@@ -1,11 +1,11 @@
 ---
-name: improve-codebase-architecture
-description: Explore a codebase to find opportunities for architectural improvement, focusing on making the codebase more testable by deepening shallow modules. Use when user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more AI-navigable.
+name: improve-codebase-architecture-bd
+description: Explore a codebase to find opportunities for architectural improvement, focusing on making the codebase more testable by deepening shallow modules, tracked with Beads local tracker. Use when user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more AI-navigable with local issue tracking.
 ---
 
-# Improve Codebase Architecture
+# Improve Codebase Architecture (Beads)
 
-Explore a codebase like an AI would, surface architectural friction, discover opportunities for improving testability, and propose module-deepening refactors as issue RFCs.
+Explore a codebase like an AI would, surface architectural friction, discover opportunities for improving testability, and propose module-deepening refactors as issue RFCs tracked locally with Beads.
 
 A **deep module** (John Ousterhout, "A Philosophy of Software Design") has a small interface hiding a large implementation. Deep modules are more testable, more AI-navigable, and let you test at the boundary instead of inside.
 
@@ -73,12 +73,10 @@ After comparing, give your own recommendation: which design you think is stronge
 
 ### 7. Create issue
 
-<platform-detection>
-Before running issue commands, detect the hosting platform:
-1. Run `git remote get-url origin`
-2. If URL contains "github.com" → use `gh` CLI
-3. If URL contains "gitlab" → use `glab` CLI
-4. Otherwise → ask the user which platform and CLI to use
-</platform-detection>
+<beads-init>
+Before running any `bd` commands, verify Beads is initialized:
+1. Run `bd list`
+2. If it fails, run `bd init` first to initialize the beads database in this project
+</beads-init>
 
-Create a refactor RFC as an issue using the platform CLI's issue create command. Use the template in [REFERENCE.md](REFERENCE.md). Do NOT ask the user to review before creating — just create it and share the URL.
+Create a refactor RFC as a Beads issue using `bd create` with `--stdin` for the body, using `-t task`. Use the template in [REFERENCE.md](REFERENCE.md). Do NOT ask the user to review before creating — just create it and share the issue ID.

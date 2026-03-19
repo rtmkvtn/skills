@@ -1,11 +1,11 @@
 ---
-name: triage-issue
-description: Triage a bug or issue by exploring the codebase to find root cause, then create an issue with a TDD-based fix plan. Use when user reports a bug, wants to file an issue, mentions "triage", or wants to investigate and plan a fix for a problem.
+name: triage-issue-bd
+description: Triage a bug or issue by exploring the codebase to find root cause, then create a Beads issue with a TDD-based fix plan using local tracker. Use when user reports a bug, wants to file a local issue, mentions "triage", or wants to investigate and plan a fix tracked with Beads.
 ---
 
-# Triage Issue
+# Triage Issue (Beads)
 
-Investigate a reported problem, find its root cause, and create an issue with a TDD fix plan. This is a mostly hands-off workflow - minimize questions to the user.
+Investigate a reported problem, find its root cause, and create a Beads issue with a TDD fix plan. This is a mostly hands-off workflow - minimize questions to the user.
 
 ## Process
 
@@ -56,15 +56,13 @@ Rules:
 
 ### 5. Create the issue
 
-<platform-detection>
-Before running issue commands, detect the hosting platform:
-1. Run `git remote get-url origin`
-2. If URL contains "github.com" → use `gh` CLI
-3. If URL contains "gitlab" → use `glab` CLI
-4. Otherwise → ask the user which platform and CLI to use
-</platform-detection>
+<beads-init>
+Before running any `bd` commands, verify Beads is initialized:
+1. Run `bd list`
+2. If it fails, run `bd init` first to initialize the beads database in this project
+</beads-init>
 
-Create an issue using the platform CLI's issue create command with the template below. Do NOT ask the user to review before creating - just create it and share the URL.
+Create a Beads issue using `bd create` with `--stdin` for the body, using `-t task`. Do NOT ask the user to review before creating - just create it and share the issue ID.
 
 <issue-template>
 
@@ -107,4 +105,4 @@ A numbered list of RED-GREEN cycles:
 
 </issue-template>
 
-After creating the issue, print the issue URL and a one-line summary of the root cause.
+After creating the issue, print the issue ID and a one-line summary of the root cause.
