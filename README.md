@@ -6,10 +6,16 @@ A collection of agent skills that extend capabilities across planning, developme
 
 These skills help you think through problems before writing code.
 
-- **write-a-prd** — Create a PRD through an interactive interview, codebase exploration, and module design. Filed as a GitHub issue.
+- **write-a-prd** — Create a PRD through an interactive interview, codebase exploration, and module design. Filed as an issue (auto-detects GitHub/GitLab).
 
   ```
   npx skills@latest add rtmkvtn/skills/write-a-prd
+  ```
+
+- **write-a-prd-bd** — Same as write-a-prd, but tracks issues locally using Beads.
+
+  ```
+  npx skills@latest add rtmkvtn/skills/write-a-prd-bd
   ```
 
 - **prd-to-plan** — Turn a PRD into a multi-phase implementation plan using tracer-bullet vertical slices.
@@ -18,10 +24,16 @@ These skills help you think through problems before writing code.
   npx skills@latest add rtmkvtn/skills/prd-to-plan
   ```
 
-- **prd-to-issues** — Break a PRD into independently-grabbable GitHub issues using vertical slices.
+- **prd-to-issues** — Break a PRD into independently-grabbable issues using vertical slices (auto-detects GitHub/GitLab).
 
   ```
   npx skills@latest add rtmkvtn/skills/prd-to-issues
+  ```
+
+- **prd-to-issues-bd** — Same as prd-to-issues, but tracks issues locally using Beads.
+
+  ```
+  npx skills@latest add rtmkvtn/skills/prd-to-issues-bd
   ```
 
 - **grill-me** — Get relentlessly interviewed about a plan or design until every branch of the decision tree is resolved.
@@ -36,10 +48,16 @@ These skills help you think through problems before writing code.
   npx skills@latest add rtmkvtn/skills/design-an-interface
   ```
 
-- **request-refactor-plan** — Create a detailed refactor plan with tiny commits via user interview, then file it as a GitHub issue.
+- **request-refactor-plan** — Create a detailed refactor plan with tiny commits via user interview, filed as an issue (auto-detects GitHub/GitLab).
 
   ```
   npx skills@latest add rtmkvtn/skills/request-refactor-plan
+  ```
+
+- **request-refactor-plan-bd** — Same as request-refactor-plan, but tracks issues locally using Beads.
+
+  ```
+  npx skills@latest add rtmkvtn/skills/request-refactor-plan-bd
   ```
 
 ## Development
@@ -52,16 +70,28 @@ These skills help you write, refactor, and fix code.
   npx skills@latest add rtmkvtn/skills/tdd
   ```
 
-- **triage-issue** — Investigate a bug by exploring the codebase, identify the root cause, and file a GitHub issue with a TDD-based fix plan.
+- **triage-issue** — Investigate a bug by exploring the codebase, identify the root cause, and file an issue with a TDD-based fix plan (auto-detects GitHub/GitLab).
 
   ```
   npx skills@latest add rtmkvtn/skills/triage-issue
   ```
 
-- **improve-codebase-architecture** — Explore a codebase for architectural improvement opportunities, focusing on deepening shallow modules and improving testability.
+- **triage-issue-bd** — Same as triage-issue, but tracks issues locally using Beads.
+
+  ```
+  npx skills@latest add rtmkvtn/skills/triage-issue-bd
+  ```
+
+- **improve-codebase-architecture** — Explore a codebase for architectural improvement opportunities, focusing on deepening shallow modules and improving testability. Issues filed via auto-detected platform (GitHub/GitLab).
 
   ```
   npx skills@latest add rtmkvtn/skills/improve-codebase-architecture
+  ```
+
+- **improve-codebase-architecture-bd** — Same as improve-codebase-architecture, but tracks issues locally using Beads.
+
+  ```
+  npx skills@latest add rtmkvtn/skills/improve-codebase-architecture-bd
   ```
 
 - **migrate-to-shoehorn** — Migrate test files from `as` type assertions to @total-typescript/shoehorn.
