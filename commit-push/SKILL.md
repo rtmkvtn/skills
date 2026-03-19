@@ -62,12 +62,15 @@ feat(auth): add JWT login flow
 
 ### 5. Confirm with user
 
-Present the proposed commit message and ask the user to choose:
+Present the proposed commit message, then ask:
 
-1. **Use as-is** — proceed to commit
-2. **Edit** — user provides corrections, then proceed
+**Commit? (y)es / (n)o / (e)dit**
 
-Do **not** commit until the user explicitly approves.
+- `y`, `k`, `ok`, `yes`, `lgtm`, or similar affirmative → proceed to commit
+- `e`, `edit` → ask what to change, apply edits, then re-confirm
+- `n`, `no`, `nah` → abort, do not commit
+
+Keep confirmation to a single short line. Do **not** commit until the user explicitly approves.
 
 ### 6. Commit
 
