@@ -37,10 +37,10 @@ export async function run() {
     selected = await checkbox({
       message: "Select skills to install:",
       choices: skills.map((s) => ({
-        name: `${s.name} — ${s.description ?? ""}`,
+        name: s.name,
         value: s.dirName,
       })),
-      pageSize: 20,
+      pageSize: skills.length,
     });
   } catch (err) {
     if (err.name === "ExitPromptError") {
