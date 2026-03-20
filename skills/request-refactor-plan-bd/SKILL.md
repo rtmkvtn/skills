@@ -29,7 +29,7 @@ Before running any `bd` commands, verify Beads is initialized:
 2. If it fails, run `bd init` first to initialize the beads database in this project
 </beads-init>
 
-Use `bd create` with `--stdin` for the body, using `-t task`, with the following template for the issue description.
+Use `bd create` with `--stdin` for the body, using `-t chore`, with the following template for the issue description.
 
 If working from an existing issue, run `bd close <id>` after creating the refactor plan issue.
 

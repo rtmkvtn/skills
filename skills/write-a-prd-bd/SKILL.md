@@ -27,7 +27,7 @@ Before running any `bd` commands, verify Beads is initialized:
 2. If it fails, run `bd init` first to initialize the beads database in this project
 </beads-init>
 
-The PRD should be submitted as a Beads issue using `bd create` with `--stdin` for the body, using `-t task`.
+The PRD should be submitted as a Beads issue using `bd create` with `--stdin` for the body, using `-t epic`.
 
 If working from an existing issue, run `bd close <id>` after creating the PRD issue.
 

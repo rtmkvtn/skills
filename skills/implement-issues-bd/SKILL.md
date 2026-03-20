@@ -19,6 +19,8 @@ Before running any `bd` commands, verify Beads is initialized:
 
 Run `bd list` to get all issues. For each open issue, run `bd show <id> --json` to fetch its full body.
 
+Only implement issues of type `task`, `bug`, or `chore`. Skip `epic` issues — they are PRD containers, not implementable work items.
+
 If the user specifies a filter (label, parent PRD ID, or specific IDs), apply it. Otherwise fetch all open issues.
 
 ### 2. Sort by dependencies
@@ -26,6 +28,8 @@ If the user specifies a filter (label, parent PRD ID, or specific IDs), apply it
 Parse each issue body for a "Blocked by" section containing beads ID references.
 
 Sort issues so that issues with no unresolved blockers come first (topological sort). If a cycle is detected, warn the user and skip the cycle.
+
+Within the same dependency tier, prioritize by type: `bug` first, then `task`, then `chore`.
 
 For each issue, note the **Type** field (HITL or AFK) from the issue body if present.
 

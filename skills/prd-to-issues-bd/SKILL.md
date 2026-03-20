@@ -59,7 +59,7 @@ Iterate until the user approves the breakdown.
 
 ### 5. Create the issues
 
-For each approved slice, create a Beads issue. Use `bd create` with `--stdin` for the issue body, passing the template below. Use `-t task` to mark them as tasks.
+For each approved slice, create a Beads issue. Use `bd create` with `--stdin` for the issue body, passing the template below. Use `-t task` and `--parent <prd-issue-id>` to mark them as tasks linked to the parent PRD epic.
 
 Create issues in dependency order (blockers first) so you can reference real issue IDs in the "Blocked by" field.
 

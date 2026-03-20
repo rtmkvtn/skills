@@ -83,6 +83,6 @@ Before running any `bd` commands, verify Beads is initialized:
 2. If it fails, run `bd init` first to initialize the beads database in this project
 </beads-init>
 
-Create a refactor RFC as a Beads issue using `bd create` with `--stdin` for the body, using `-t task`. Use the template in [REFERENCE.md](REFERENCE.md). Do NOT ask the user to review before creating — just create it and share the issue ID.
+Create a refactor RFC as a Beads issue using `bd create` with `--stdin` for the body, using `-t chore`. Use the template in [REFERENCE.md](REFERENCE.md). Do NOT ask the user to review before creating — just create it and share the issue ID.
 
 If working from an existing issue, run `bd close <id>` after creating the RFC issue.

@@ -64,7 +64,7 @@ Before running any `bd` commands, verify Beads is initialized:
 2. If it fails, run `bd init` first to initialize the beads database in this project
 </beads-init>
 
-Create a Beads issue using `bd create` with `--stdin` for the body, using `-t task`. Do NOT ask the user to review before creating - just create it and share the issue ID.
+Create a Beads issue using `bd create` with `--stdin` for the body, using `-t bug`. Do NOT ask the user to review before creating - just create it and share the issue ID.
 
 <issue-template>
 
