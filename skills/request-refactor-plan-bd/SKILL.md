@@ -5,21 +5,23 @@ description: Create a detailed refactor plan with tiny commits via user intervie
 
 This skill will be invoked when the user wants to create a refactor request. You should go through the steps below. You may skip steps if you don't consider them necessary.
 
-1. Ask the user for a long, detailed description of the problem they want to solve and any potential ideas for solutions.
+1. If the user provides a beads issue ID, fetch it with `bd show <id>` for context. Run `bd update <id> --status in_progress`.
 
-2. Explore the repo to verify their assertions and understand the current state of the codebase.
+2. Ask the user for a long, detailed description of the problem they want to solve and any potential ideas for solutions.
 
-3. Ask whether they have considered other options, and present other options to them.
+3. Explore the repo to verify their assertions and understand the current state of the codebase.
 
-4. Interview the user about the implementation. Be extremely detailed and thorough.
+4. Ask whether they have considered other options, and present other options to them.
 
-5. Hammer out the exact scope of the implementation. Work out what you plan to change and what you plan not to change.
+5. Interview the user about the implementation. Be extremely detailed and thorough.
 
-6. Look in the codebase to check for test coverage of this area of the codebase. If there is insufficient test coverage, ask the user what their plans for testing are.
+6. Hammer out the exact scope of the implementation. Work out what you plan to change and what you plan not to change.
 
-7. Break the implementation into a plan of tiny commits. Remember Martin Fowler's advice to "make each refactoring step as small as possible, so that you can always see the program working."
+7. Look in the codebase to check for test coverage of this area of the codebase. If there is insufficient test coverage, ask the user what their plans for testing are.
 
-8. Create an issue with the refactor plan.
+8. Break the implementation into a plan of tiny commits. Remember Martin Fowler's advice to "make each refactoring step as small as possible, so that you can always see the program working."
+
+9. Create an issue with the refactor plan.
 
 <beads-init>
 Before running any `bd` commands, verify Beads is initialized:
@@ -27,7 +29,9 @@ Before running any `bd` commands, verify Beads is initialized:
 2. If it fails, run `bd init` first to initialize the beads database in this project
 </beads-init>
 
-Use `bd create` with `--stdin` for the body, using `-t task`, with the following template for the issue description:
+Use `bd create` with `--stdin` for the body, using `-t task`, with the following template for the issue description.
+
+If working from an existing issue, run `bd close <id>` after creating the refactor plan issue.
 
 <refactor-plan-template>
 

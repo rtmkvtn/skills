@@ -13,6 +13,8 @@ Investigate a reported problem, find its root cause, and create a Beads issue wi
 
 Get a brief description of the issue from the user. If they haven't provided one, ask ONE question: "What's the problem you're seeing?"
 
+If the user provides a beads issue ID, fetch it with `bd show <id>` to get context. Run `bd update <id> --status in_progress`.
+
 Do NOT ask follow-up questions yet. Start investigating immediately.
 
 ### 2. Explore and diagnose
@@ -106,3 +108,5 @@ A numbered list of RED-GREEN cycles:
 </issue-template>
 
 After creating the issue, print the issue ID and a one-line summary of the root cause.
+
+If working from an existing issue, run `bd close <id>` after creating the triage issue.

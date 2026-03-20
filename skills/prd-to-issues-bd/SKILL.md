@@ -21,6 +21,8 @@ Ask the user for the PRD issue ID.
 
 If the PRD is not already in your context window, fetch it with `bd show <id> --json`.
 
+Run `bd update <id> --status in_progress` to mark the PRD issue as in progress.
+
 ### 2. Explore the codebase (optional)
 
 If you have not already explored the codebase, do so to understand the current state of the code.
@@ -91,4 +93,4 @@ Reference by number from the parent PRD:
 
 </issue-template>
 
-Do NOT close or modify the parent PRD issue.
+After all sub-issues are created, run `bd close <id>` to close the PRD issue.

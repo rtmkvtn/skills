@@ -11,6 +11,10 @@ A **deep module** (John Ousterhout, "A Philosophy of Software Design") has a sma
 
 ## Process
 
+### 0. Check for existing issue
+
+If the user provides a beads issue ID, fetch it with `bd show <id>` for context. Run `bd update <id> --status in_progress`.
+
 ### 1. Explore the codebase
 
 Use the Agent tool with subagent_type=Explore to navigate the codebase naturally. Do NOT follow rigid heuristics — explore organically and note where you experience friction:
@@ -80,3 +84,5 @@ Before running any `bd` commands, verify Beads is initialized:
 </beads-init>
 
 Create a refactor RFC as a Beads issue using `bd create` with `--stdin` for the body, using `-t task`. Use the template in [REFERENCE.md](REFERENCE.md). Do NOT ask the user to review before creating — just create it and share the issue ID.
+
+If working from an existing issue, run `bd close <id>` after creating the RFC issue.
