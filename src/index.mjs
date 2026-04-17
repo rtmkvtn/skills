@@ -66,19 +66,13 @@ export async function run() {
     return;
   }
 
-  const projectSkillsDir = gitRoot
-    ? join(gitRoot, ".claude", "skills")
-    : null;
+  const projectRoot = gitRoot ?? process.cwd();
+  const projectSkillsDir = join(projectRoot, ".claude", "skills");
 
   const scopeChoices = [
+    { name: `Project (${projectSkillsDir})`, value: projectSkillsDir },
     { name: "Global  (~/.claude/skills/)", value: GLOBAL_SKILLS_DIR },
   ];
-  if (projectSkillsDir) {
-    scopeChoices.unshift({
-      name: `Project (${projectSkillsDir})`,
-      value: projectSkillsDir,
-    });
-  }
 
   let skillsDir;
   try {
@@ -132,7 +126,7 @@ export async function run() {
   }
 
   // Permissions prompt — only for project-scoped installs
-  const isProjectScope = gitRoot && skillsDir === projectSkillsDir;
+  const isProjectScope = skillsDir === projectSkillsDir;
   if (isProjectScope) {
     const allPermissions = [
       ...new Set(
@@ -157,7 +151,7 @@ export async function run() {
         });
 
         if (addPerms) {
-          const settingsPath = join(gitRoot, ".claude", "settings.local.json");
+          const settingsPath = join(projectRoot, ".claude", "settings.local.json");
           const added = await mergePermissions(settingsPath, allPermissions);
           if (added.length > 0) {
             console.log(`\nAdded ${added.length} permission(s) to ${settingsPath}`);
