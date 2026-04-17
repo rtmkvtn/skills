@@ -1,4 +1,4 @@
-import { mkdir, writeFile, rm, chmod } from "node:fs/promises";
+import { mkdir, readFile, writeFile, rm, chmod } from "node:fs/promises";
 import { join, dirname } from "node:path";
 import { fetchDirectoryTree } from "./github.mjs";
 
@@ -40,4 +40,34 @@ export async function installSkills(owner, repo, skillDirNames, skillsDir) {
 
     console.log(`  Installed ${dirName} → ${destDir}`);
   }
+}
+
+/**
+ * Merge permissions into a project's .claude/settings.local.json.
+ * Creates the file if it doesn't exist. Returns newly added permissions.
+ */
+export async function mergePermissions(settingsPath, permissions) {
+  let settings = { permissions: { allow: [] } };
+
+  try {
+    const raw = await readFile(settingsPath, "utf-8");
+    settings = JSON.parse(raw);
+    if (!settings.permissions) settings.permissions = {};
+    if (!Array.isArray(settings.permissions.allow))
+      settings.permissions.allow = [];
+  } catch {
+    // File doesn't exist or is invalid — use default
+  }
+
+  const existing = new Set(settings.permissions.allow);
+  const added = permissions.filter((p) => !existing.has(p));
+
+  if (added.length === 0) return [];
+
+  settings.permissions.allow.push(...added);
+
+  await mkdir(dirname(settingsPath), { recursive: true });
+  await writeFile(settingsPath, JSON.stringify(settings, null, 2) + "\n");
+
+  return added;
 }

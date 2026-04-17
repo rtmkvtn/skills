@@ -1,6 +1,7 @@
 ---
 name: prd-to-issues-bd
 description: Break a PRD into independently-grabbable issues using Beads local tracker and tracer-bullet vertical slices. Use when user wants to convert a PRD to local issues, create implementation tickets with Beads, or break down a PRD into work items tracked locally.
+permissions: Bash(bd:*)
 ---
 
 # PRD to Issues (Beads)

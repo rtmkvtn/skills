@@ -1,14 +1,22 @@
+import { execSync } from "node:child_process";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { existsSync } from "node:fs";
 import { checkbox, confirm, select } from "@inquirer/prompts";
 import { fetchSkillList } from "./github.mjs";
-import { installSkills } from "./installer.mjs";
+import { installSkills, mergePermissions } from "./installer.mjs";
 
 const OWNER = "rtmkvtn";
 const REPO = "skills";
 const GLOBAL_SKILLS_DIR = join(homedir(), ".claude", "skills");
-const PROJECT_SKILLS_DIR = join(process.cwd(), ".claude", "skills");
+
+function getGitRoot() {
+  try {
+    return execSync("git rev-parse --show-toplevel", { encoding: "utf-8" }).trim();
+  } catch {
+    return null;
+  }
+}
 
 export async function run() {
   // Node version check
@@ -17,6 +25,8 @@ export async function run() {
     console.error(`Node.js >= 18 is required (current: ${process.version})`);
     process.exit(1);
   }
+
+  const gitRoot = getGitRoot();
 
   console.log("Fetching available skills…\n");
 
@@ -56,14 +66,25 @@ export async function run() {
     return;
   }
 
+  const projectSkillsDir = gitRoot
+    ? join(gitRoot, ".claude", "skills")
+    : null;
+
+  const scopeChoices = [
+    { name: "Global  (~/.claude/skills/)", value: GLOBAL_SKILLS_DIR },
+  ];
+  if (projectSkillsDir) {
+    scopeChoices.unshift({
+      name: `Project (${projectSkillsDir})`,
+      value: projectSkillsDir,
+    });
+  }
+
   let skillsDir;
   try {
     skillsDir = await select({
       message: "Install scope:",
-      choices: [
-        { name: "Global  (~/.claude/skills/)", value: GLOBAL_SKILLS_DIR },
-        { name: "Project (./.claude/skills/)", value: PROJECT_SKILLS_DIR },
-      ],
+      choices: scopeChoices,
     });
   } catch (err) {
     if (err.name === "ExitPromptError") {
@@ -108,6 +129,50 @@ export async function run() {
   } catch (err) {
     console.error(`\nInstallation failed: ${err.message}`);
     process.exit(1);
+  }
+
+  // Permissions prompt — only for project-scoped installs
+  const isProjectScope = gitRoot && skillsDir === projectSkillsDir;
+  if (isProjectScope) {
+    const allPermissions = [
+      ...new Set(
+        selected.flatMap((dirName) => {
+          const skill = skills.find((s) => s.dirName === dirName);
+          return skill?.permissions ?? [];
+        })
+      ),
+    ];
+
+    if (allPermissions.length > 0) {
+      console.log("\nThe selected skills request these permissions:");
+      for (const p of allPermissions) {
+        console.log(`  - ${p}`);
+      }
+      console.log();
+
+      try {
+        const addPerms = await confirm({
+          message: "Add these to .claude/settings.local.json?",
+          default: true,
+        });
+
+        if (addPerms) {
+          const settingsPath = join(gitRoot, ".claude", "settings.local.json");
+          const added = await mergePermissions(settingsPath, allPermissions);
+          if (added.length > 0) {
+            console.log(`\nAdded ${added.length} permission(s) to ${settingsPath}`);
+          } else {
+            console.log("\nAll permissions already configured.");
+          }
+        }
+      } catch (err) {
+        if (err.name === "ExitPromptError") {
+          console.log("\nSkipped permissions.");
+        } else {
+          throw err;
+        }
+      }
+    }
   }
 
   console.log("\nDone! Skills are ready to use in Claude Code.");

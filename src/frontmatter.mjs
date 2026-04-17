@@ -11,6 +11,12 @@ export function parseFrontmatter(content) {
   const description =
     block.match(/^description:\s*(.+)$/m)?.[1]?.trim() ?? null;
 
+  const permissionsRaw =
+    block.match(/^permissions:\s*(.+)$/m)?.[1]?.trim() ?? null;
+  const permissions = permissionsRaw
+    ? permissionsRaw.split(", ").map((p) => p.trim())
+    : [];
+
   if (!name) return null;
-  return { name, description };
+  return { name, description, permissions };
 }

@@ -1,6 +1,7 @@
 ---
 name: improve-codebase-architecture-bd
 description: Explore a codebase to find opportunities for architectural improvement, focusing on making the codebase more testable by deepening shallow modules, tracked with Beads local tracker. Use when user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more AI-navigable with local issue tracking.
+permissions: Bash(bd:*)
 ---
 
 # Improve Codebase Architecture (Beads)

@@ -1,6 +1,7 @@
 ---
 name: implement-issues-bd
 description: Implement all open Beads issues using TDD vertical slices, then close them. Fetches issues from local Beads tracker, sorts by dependencies, implements each with red-green-refactor, commits, and closes. Use when user wants to implement local issues, work through a Beads backlog, or build out planned features from Beads issues.
+permissions: Bash(bd:*)
 ---
 
 # Implement Issues (Beads)

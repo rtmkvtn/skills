@@ -1,6 +1,7 @@
 ---
 name: triage-issue-bd
 description: Triage a bug or issue by exploring the codebase to find root cause, then create a Beads issue with a TDD-based fix plan using local tracker. Use when user reports a bug, wants to file a local issue, mentions "triage", or wants to investigate and plan a fix tracked with Beads.
+permissions: Bash(bd:*)
 ---
 
 # Triage Issue (Beads)
