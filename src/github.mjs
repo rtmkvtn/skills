@@ -18,25 +18,46 @@ async function fetchJSON(url) {
   return res.json();
 }
 
+// Cached per CLI invocation — one recursive tree call covers discovery and install.
+let cachedTree = null;
+async function getRepoTree(owner, repo) {
+  if (cachedTree) return cachedTree;
+  const json = await fetchJSON(
+    `https://api.github.com/repos/${owner}/${repo}/git/trees/HEAD?recursive=1`
+  );
+  if (json.truncated) {
+    console.warn(
+      "Warning: GitHub returned a truncated repo tree. Some skills may be missed."
+    );
+  }
+  cachedTree = json.tree;
+  return cachedTree;
+}
+
 /**
- * List skills in the repo by discovering directories inside skills/ that contain a SKILL.md.
+ * List skills by finding SKILL.md files under skills/<category>/<dirName>/.
  */
 export async function fetchSkillList(owner, repo) {
-  const entries = await fetchJSON(
-    `https://api.github.com/repos/${owner}/${repo}/contents/skills`
-  );
+  const tree = await getRepoTree(owner, repo);
+  const skillMd = /^skills\/([^/]+)\/([^/]+)\/SKILL\.md$/;
 
-  const dirs = entries.filter((e) => e.type === "dir");
+  const entries = tree
+    .filter((e) => e.type === "blob")
+    .map((e) => {
+      const m = e.path.match(skillMd);
+      return m ? { category: m[1], dirName: m[2], path: e.path } : null;
+    })
+    .filter(Boolean);
 
   const results = await Promise.allSettled(
-    dirs.map(async (dir) => {
-      const url = `${RAW_BASE}/${owner}/${repo}/HEAD/skills/${dir.name}/SKILL.md`;
+    entries.map(async ({ category, dirName, path }) => {
+      const url = `${RAW_BASE}/${owner}/${repo}/HEAD/${path}`;
       const res = await fetch(url);
       if (!res.ok) return null;
       const text = await res.text();
       const meta = parseFrontmatter(text);
       if (!meta) return null;
-      return { dirName: dir.name, ...meta };
+      return { category, dirName, ...meta };
     })
   );
 
@@ -46,24 +67,15 @@ export async function fetchSkillList(owner, repo) {
 }
 
 /**
- * Recursively list all files in a skill directory.
+ * List every file under a single skill's source directory.
  */
-export async function fetchDirectoryTree(owner, repo, dirPath) {
-  const entries = await fetchJSON(
-    `https://api.github.com/repos/${owner}/${repo}/contents/${dirPath}`
-  );
-
-  const files = [];
-  for (const entry of entries) {
-    if (entry.type === "file") {
-      files.push({
-        path: entry.path,
-        relativePath: entry.path.slice(dirPath.length + 1),
-      });
-    } else if (entry.type === "dir") {
-      const nested = await fetchDirectoryTree(owner, repo, entry.path);
-      files.push(...nested);
-    }
-  }
-  return files;
+export async function fetchSkillFiles(owner, repo, category, dirName) {
+  const tree = await getRepoTree(owner, repo);
+  const prefix = `skills/${category}/${dirName}/`;
+  return tree
+    .filter((e) => e.type === "blob" && e.path.startsWith(prefix))
+    .map((e) => ({
+      path: e.path,
+      relativePath: e.path.slice(prefix.length),
+    }));
 }

@@ -2,7 +2,7 @@ import { execSync } from "node:child_process";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { existsSync } from "node:fs";
-import { checkbox, confirm, select } from "@inquirer/prompts";
+import { checkbox, confirm, select, Separator } from "@inquirer/prompts";
 import { fetchSkillList } from "./github.mjs";
 import { installSkills, mergePermissions } from "./installer.mjs";
 
@@ -16,6 +16,24 @@ function getGitRoot() {
   } catch {
     return null;
   }
+}
+
+function buildGroupedChoices(skills) {
+  const byCategory = new Map();
+  for (const s of skills) {
+    if (!byCategory.has(s.category)) byCategory.set(s.category, []);
+    byCategory.get(s.category).push(s);
+  }
+  const choices = [];
+  for (const category of [...byCategory.keys()].sort()) {
+    choices.push(new Separator(`── ${category} ──`));
+    for (const s of byCategory.get(category).sort((a, b) =>
+      a.dirName.localeCompare(b.dirName)
+    )) {
+      choices.push({ name: s.dirName, value: s.dirName });
+    }
+  }
+  return choices;
 }
 
 export async function run() {
@@ -43,15 +61,14 @@ export async function run() {
     return;
   }
 
+  const choices = buildGroupedChoices(skills);
+
   let selected;
   try {
     selected = await checkbox({
       message: "Select skills to install:",
-      choices: skills.map((s) => ({
-        name: s.name,
-        value: s.dirName,
-      })),
-      pageSize: skills.length,
+      choices,
+      pageSize: choices.length,
     });
   } catch (err) {
     if (err.name === "ExitPromptError") {
@@ -88,7 +105,7 @@ export async function run() {
     throw err;
   }
 
-  // Check for existing installs
+  // Check for existing installs (destination is flat, so check by dirName)
   const existing = selected.filter((name) =>
     existsSync(join(skillsDir, name))
   );
@@ -118,8 +135,13 @@ export async function run() {
 
   console.log(`\nInstalling ${selected.length} skill(s) to ${skillsDir}…\n`);
 
+  const installList = selected.map((dirName) => {
+    const s = skills.find((x) => x.dirName === dirName);
+    return { category: s.category, dirName };
+  });
+
   try {
-    await installSkills(OWNER, REPO, selected, skillsDir);
+    await installSkills(OWNER, REPO, installList, skillsDir);
   } catch (err) {
     console.error(`\nInstallation failed: ${err.message}`);
     process.exit(1);

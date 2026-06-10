@@ -18,45 +18,31 @@ cd skills
 ./install.sh --all
 ```
 
-## Planning & Design
+> **Per-repo config:** Engineering skills read the issue-tracker backend (Beads / GitHub / GitLab / local markdown), triage label vocabulary, and domain-doc layout from `docs/agents/*.md`. Run **init-for-skills** once per project to scaffold these. If unset, issue skills auto-detect a backend for the current run.
 
-These skills help you think through problems before writing code.
+## Engineering
 
-- **write-a-prd** — Create a PRD through an interactive interview, codebase exploration, and module design. Filed as an issue (auto-detects GitHub/GitLab).
+These skills help you think through problems, write, refactor, and fix code.
 
-- **write-a-prd-bd** — Same as write-a-prd, but tracks issues locally using Beads.
+- **init-for-skills** — Scaffold per-repo config (issue tracker, triage label vocabulary, domain-doc layout) into `CLAUDE.md` / `AGENTS.md` and `docs/agents/*.md` so the other engineering skills know how to operate. Supports GitHub, GitLab, Beads, and local markdown.
 
-- **prd-to-plan** — Turn a PRD into a multi-phase implementation plan using tracer-bullet vertical slices.
+- **to-prd** — Synthesise a PRD from the current conversation and codebase understanding. Files it via the configured issue tracker.
 
-- **prd-to-issues** — Break a PRD into independently-grabbable issues using vertical slices (auto-detects GitHub/GitLab).
+- **to-issues** — Break a PRD or plan into independently-grabbable issues using tracer-bullet vertical slices.
 
-- **prd-to-issues-bd** — Same as prd-to-issues, but tracks issues locally using Beads.
-
-- **grill-me** — Get relentlessly interviewed about a plan or design until every branch of the decision tree is resolved.
-
-- **design-an-interface** — Generate multiple radically different interface designs for a module using parallel sub-agents.
-
-- **request-refactor-plan** — Create a detailed refactor plan with tiny commits via user interview, filed as an issue (auto-detects GitHub/GitLab).
-
-- **request-refactor-plan-bd** — Same as request-refactor-plan, but tracks issues locally using Beads.
-
-## Development
-
-These skills help you write, refactor, and fix code.
+- **triage** — Move an incoming issue through the five-state triage label vocabulary, applying the right labels.
 
 - **tdd** — Test-driven development with a red-green-refactor loop. Builds features or fixes bugs one vertical slice at a time.
 
-- **triage-issue** — Investigate a bug by exploring the codebase, identify the root cause, and file an issue with a TDD-based fix plan (auto-detects GitHub/GitLab).
+- **diagnose** — Investigate a bug or issue by exploring the codebase to find the root cause.
 
-- **triage-issue-bd** — Same as triage-issue, but tracks issues locally using Beads.
+- **prototype** — Build a quick prototype to validate an idea before committing to full implementation.
 
-- **improve-codebase-architecture** — Explore a codebase for architectural improvement opportunities, focusing on deepening shallow modules and improving testability. Issues filed via auto-detected platform (GitHub/GitLab).
+- **improve-codebase-architecture** — Explore a codebase for architectural improvement opportunities, focusing on deepening shallow modules and improving testability.
 
-- **improve-codebase-architecture-bd** — Same as improve-codebase-architecture, but tracks issues locally using Beads.
+- **grill-with-docs** — Resolve unclear concepts by interviewing the user, then update `CONTEXT.md` and ADRs with the agreed terminology / decisions.
 
-- **migrate-to-shoehorn** — Migrate test files from `as` type assertions to @total-typescript/shoehorn.
-
-- **scaffold-exercises** — Create exercise directory structures with sections, problems, solutions, and explainers.
+- **zoom-out** — Ask the agent for broader context or a higher-level perspective on the code you're looking at.
 
 ## Tooling & Setup
 
@@ -64,8 +50,24 @@ These skills help you write, refactor, and fix code.
 
 - **git-guardrails-claude-code** — Set up Claude Code hooks to block dangerous git commands (push, reset --hard, clean, etc.) before they execute.
 
-## Writing & Knowledge
+- **migrate-to-shoehorn** — Migrate test files from `as` type assertions to @total-typescript/shoehorn.
+
+- **scaffold-exercises** — Create exercise directory structures with sections, problems, solutions, and explainers.
+
+## Git Workflow
+
+- **commit** — Generate a commit message and commit all changes locally.
+
+- **commit-push** — Generate a commit message, commit all changes, and push to the current branch.
+
+## Productivity
+
+- **grill-me** — Get relentlessly interviewed about a plan or design until every branch of the decision tree is resolved.
+
+- **teach** — Teach a topic across multiple sessions using a structured workspace (mission, glossary, learning record, resources).
+
+- **handoff** — Compact the current conversation into a handoff document so a fresh agent can pick up the work.
+
+- **caveman** — Ultra-compressed communication mode. Cuts token usage ~75% by dropping filler while keeping technical accuracy.
 
 - **write-a-skill** — Create new skills with proper structure, progressive disclosure, and bundled resources.
-
-- **ubiquitous-language** — Extract a DDD-style ubiquitous language glossary from the current conversation.
