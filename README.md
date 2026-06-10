@@ -18,7 +18,7 @@ cd skills
 ./install.sh --all
 ```
 
-> **Issue tracking:** Skills that file or fetch issues read the backend (Beads / GitHub / GitLab) from `CLAUDE.md`. Run **init-issue-tracker** once per project to record it. If unset, each skill auto-detects and falls back for the current run.
+> **Per-repo config:** Engineering skills read the issue-tracker backend (Beads / GitHub / GitLab / local markdown), triage label vocabulary, and domain-doc layout from `docs/agents/*.md`. Run **init-for-skills** once per project to scaffold these. If unset, issue skills auto-detect a backend for the current run.
 
 ## Planning & Design
 
@@ -50,7 +50,7 @@ These skills help you write, refactor, and fix code.
 
 ## Tooling & Setup
 
-- **init-issue-tracker** — Record the project's issue-tracking backend (Beads / GitHub / GitLab) into `CLAUDE.md` so other skills know how to file issues.
+- **init-for-skills** — Scaffold per-repo config (issue tracker, triage label vocabulary, domain-doc layout) into `CLAUDE.md` / `AGENTS.md` and `docs/agents/*.md` so engineering skills know how to operate. Supports GitHub, GitLab, Beads, and local markdown.
 
 - **setup-pre-commit** — Set up Husky pre-commit hooks with lint-staged, Prettier, type checking, and tests.
 
@@ -65,3 +65,9 @@ These skills help you write, refactor, and fix code.
 ## Writing & Knowledge
 
 - **write-a-skill** — Create new skills with proper structure, progressive disclosure, and bundled resources.
+
+- **teach** — Teach a topic across multiple sessions using a structured workspace (mission, glossary, learning record, resources).
+
+- **handoff** — Compact the current conversation into a handoff document so a fresh agent can pick up the work.
+
+- **caveman** — Ultra-compressed communication mode. Cuts token usage ~75% by dropping filler while keeping technical accuracy.

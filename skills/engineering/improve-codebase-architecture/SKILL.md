@@ -1,6 +1,6 @@
 ---
 name: improve-codebase-architecture
-description: Explore a codebase to find opportunities for architectural improvement, focusing on making the codebase more testable by deepening shallow modules. Files an RFC issue using the backend (Beads, GitHub, or GitLab) recorded in CLAUDE.md. Use when user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more AI-navigable.
+description: Explore a codebase to find opportunities for architectural improvement, focusing on making the codebase more testable by deepening shallow modules. Files an RFC issue using the backend (Beads, GitHub, GitLab, or local markdown) recorded in docs/agents/issue-tracker.md. Use when user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more AI-navigable.
 permissions: Bash(bd:*), Bash(gh:*), Bash(glab:*), Bash(git:*)
 ---
 
@@ -15,22 +15,18 @@ A **deep module** (John Ousterhout, "A Philosophy of Software Design") has a sma
 ### 0. Resolve the issue-tracking backend
 
 <issue-tracker-resolution>
-Read `CLAUDE.md` at the repo root and look for:
+Read `docs/agents/issue-tracker.md` at the repo root. It declares which backend is in use (GitHub, GitLab, Beads, local markdown, or other) and may override default conventions — defer to it whenever it's more specific than the inline blocks below.
 
-```
-## Issue Tracking
+If the file doesn't exist, auto-detect for this run:
 
-Backend: <beads|github|gitlab>
-```
+1. `.beads/` exists → use `beads`
+2. `git remote get-url origin` contains `github.com` → use `github`
+3. `git remote get-url origin` contains `gitlab` → use `gitlab`
+4. Otherwise → ask the user which to use
 
-- If found → use the backend named there. Use the matching `<beads>`, `<github>`, or `<gitlab>` blocks below for all issue commands.
-- If missing → auto-detect for this run:
-  1. `.beads/` exists → use `beads`
-  2. `git remote get-url origin` contains `github.com` → use `github`
-  3. `git remote get-url origin` contains `gitlab` → use `gitlab`
-  4. Otherwise → ask the user which to use
-  
-  Then tell the user: *"No issue tracking backend is set in CLAUDE.md. Using **\<backend\>** for this task. Run the `init-issue-tracker` skill to make this permanent."*
+Then tell the user: *"No `docs/agents/issue-tracker.md` found. Using **\<backend\>** for this task. Run the `init-for-skills` skill to make this permanent."*
+
+Use the matching `<beads>`, `<github>`, or `<gitlab>` blocks below for issue commands.
 
 If `beads` is the resolved backend, verify it is initialised by running `bd list`; if it fails, run `bd init`.
 </issue-tracker-resolution>
