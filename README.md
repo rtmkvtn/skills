@@ -20,41 +20,39 @@ cd skills
 
 > **Per-repo config:** Engineering skills read the issue-tracker backend (Beads / GitHub / GitLab / local markdown), triage label vocabulary, and domain-doc layout from `docs/agents/*.md`. Run **init-for-skills** once per project to scaffold these. If unset, issue skills auto-detect a backend for the current run.
 
-## Planning & Design
+## Engineering
 
-These skills help you think through problems before writing code.
+These skills help you think through problems, write, refactor, and fix code.
 
-- **write-a-prd** — Create a PRD through an interactive interview, codebase exploration, and module design. Filed as an issue using the configured backend.
+- **init-for-skills** — Scaffold per-repo config (issue tracker, triage label vocabulary, domain-doc layout) into `CLAUDE.md` / `AGENTS.md` and `docs/agents/*.md` so the other engineering skills know how to operate. Supports GitHub, GitLab, Beads, and local markdown.
 
-- **prd-to-plan** — Turn a PRD into a multi-phase implementation plan using tracer-bullet vertical slices.
+- **to-prd** — Synthesise a PRD from the current conversation and codebase understanding. Files it via the configured issue tracker.
 
-- **prd-to-issues** — Break a PRD into independently-grabbable issues using vertical slices.
+- **to-issues** — Break a PRD or plan into independently-grabbable issues using tracer-bullet vertical slices.
 
-- **grill-me** — Get relentlessly interviewed about a plan or design until every branch of the decision tree is resolved.
-
-## Development
-
-These skills help you write, refactor, and fix code.
+- **triage** — Move an incoming issue through the five-state triage label vocabulary, applying the right labels.
 
 - **tdd** — Test-driven development with a red-green-refactor loop. Builds features or fixes bugs one vertical slice at a time.
 
-- **triage-issue** — Investigate a bug by exploring the codebase, identify the root cause, and file an issue with a TDD-based fix plan.
+- **diagnose** — Investigate a bug or issue by exploring the codebase to find the root cause.
 
-- **implement-issues** — Fetch open issues, sort by dependencies, implement each with TDD (red-green-refactor), commit, and close.
+- **prototype** — Build a quick prototype to validate an idea before committing to full implementation.
 
-- **improve-codebase-architecture** — Explore a codebase for architectural improvement opportunities, focusing on deepening shallow modules and improving testability. Issues filed using the configured backend.
+- **improve-codebase-architecture** — Explore a codebase for architectural improvement opportunities, focusing on deepening shallow modules and improving testability.
 
-- **migrate-to-shoehorn** — Migrate test files from `as` type assertions to @total-typescript/shoehorn.
+- **grill-with-docs** — Resolve unclear concepts by interviewing the user, then update `CONTEXT.md` and ADRs with the agreed terminology / decisions.
 
-- **scaffold-exercises** — Create exercise directory structures with sections, problems, solutions, and explainers.
+- **zoom-out** — Ask the agent for broader context or a higher-level perspective on the code you're looking at.
 
 ## Tooling & Setup
-
-- **init-for-skills** — Scaffold per-repo config (issue tracker, triage label vocabulary, domain-doc layout) into `CLAUDE.md` / `AGENTS.md` and `docs/agents/*.md` so engineering skills know how to operate. Supports GitHub, GitLab, Beads, and local markdown.
 
 - **setup-pre-commit** — Set up Husky pre-commit hooks with lint-staged, Prettier, type checking, and tests.
 
 - **git-guardrails-claude-code** — Set up Claude Code hooks to block dangerous git commands (push, reset --hard, clean, etc.) before they execute.
+
+- **migrate-to-shoehorn** — Migrate test files from `as` type assertions to @total-typescript/shoehorn.
+
+- **scaffold-exercises** — Create exercise directory structures with sections, problems, solutions, and explainers.
 
 ## Git Workflow
 
@@ -62,12 +60,14 @@ These skills help you write, refactor, and fix code.
 
 - **commit-push** — Generate a commit message, commit all changes, and push to the current branch.
 
-## Writing & Knowledge
+## Productivity
 
-- **write-a-skill** — Create new skills with proper structure, progressive disclosure, and bundled resources.
+- **grill-me** — Get relentlessly interviewed about a plan or design until every branch of the decision tree is resolved.
 
 - **teach** — Teach a topic across multiple sessions using a structured workspace (mission, glossary, learning record, resources).
 
 - **handoff** — Compact the current conversation into a handoff document so a fresh agent can pick up the work.
 
 - **caveman** — Ultra-compressed communication mode. Cuts token usage ~75% by dropping filler while keeping technical accuracy.
+
+- **write-a-skill** — Create new skills with proper structure, progressive disclosure, and bundled resources.
