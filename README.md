@@ -34,12 +34,6 @@ These skills help you think through problems before writing code.
 
 - **grill-me** — Get relentlessly interviewed about a plan or design until every branch of the decision tree is resolved.
 
-- **design-an-interface** — Generate multiple radically different interface designs for a module using parallel sub-agents.
-
-- **request-refactor-plan** — Create a detailed refactor plan with tiny commits via user interview, filed as an issue (auto-detects GitHub/GitLab).
-
-- **request-refactor-plan-bd** — Same as request-refactor-plan, but tracks issues locally using Beads.
-
 ## Development
 
 These skills help you write, refactor, and fix code.
@@ -67,5 +61,3 @@ These skills help you write, refactor, and fix code.
 ## Writing & Knowledge
 
 - **write-a-skill** — Create new skills with proper structure, progressive disclosure, and bundled resources.
-
-- **ubiquitous-language** — Extract a DDD-style ubiquitous language glossary from the current conversation.
