@@ -1,6 +1,7 @@
 ---
 name: implement-issues
-description: Implement all open issues using TDD vertical slices, then close them. Fetches issues from GitHub or GitLab, sorts by dependencies, implements each with red-green-refactor, commits, and closes. Use when user wants to implement issues, work through a backlog, or build out planned features from existing issues.
+description: Implement all open issues using TDD vertical slices, then close them. Fetches issues from Beads, GitHub, or GitLab (read from CLAUDE.md), sorts by dependencies, implements each with red-green-refactor, commits, and closes. Use when user wants to implement issues, work through a backlog, or build out planned features from existing issues.
+permissions: Bash(bd:*), Bash(gh:*), Bash(glab:*), Bash(git:*)
 ---
 
 # Implement Issues
@@ -9,28 +10,44 @@ Fetch open issues, implement each using TDD (vertical slices, red-green-refactor
 
 ## Process
 
-<platform-detection>
-Before running issue commands, detect the hosting platform:
-1. Run `git remote get-url origin`
-2. If URL contains "github.com" → use `gh` CLI
-3. If URL contains "gitlab" → use `glab` CLI
-4. Otherwise → ask the user which platform and CLI to use
-</platform-detection>
+### 0. Resolve the issue-tracking backend
+
+<issue-tracker-resolution>
+Read `CLAUDE.md` at the repo root and look for:
+
+```
+## Issue Tracking
+
+Backend: <beads|github|gitlab>
+```
+
+- If found → use the backend named there. Use the matching `<beads>`, `<github>`, or `<gitlab>` blocks below for all issue commands.
+- If missing → auto-detect for this run:
+  1. `.beads/` exists → use `beads`
+  2. `git remote get-url origin` contains `github.com` → use `github`
+  3. `git remote get-url origin` contains `gitlab` → use `gitlab`
+  4. Otherwise → ask the user which to use
+  
+  Then tell the user: *"No issue tracking backend is set in CLAUDE.md. Using **\<backend\>** for this task. Run the `init-issue-tracker` skill to make this permanent."*
+
+If `beads` is the resolved backend, verify it is initialised by running `bd list`; if it fails, run `bd init`.
+</issue-tracker-resolution>
 
 ### 1. Fetch open issues
 
-Fetch all open issues:
+<beads>Run `bd list` to get all issues. For each open issue, run `bd show <id> --json` to fetch its full body. Only implement issues of type `task`, `bug`, or `chore` — skip `epic` (PRD containers, not implementable).</beads>
+<github>Run `gh issue list --state open --json number,title,body,labels --limit 100`.</github>
+<gitlab>Run `glab issue list --opened`.</gitlab>
 
-- **GitHub**: `gh issue list --state open --json number,title,body,labels --limit 100`
-- **GitLab**: `glab issue list --opened`
-
-If the user specifies a filter (label, milestone, or parent PRD number), apply it. Otherwise fetch all open issues.
+If the user specifies a filter (label, milestone, parent PRD ID, or specific issue IDs/numbers), apply it. Otherwise fetch all open issues.
 
 ### 2. Sort by dependencies
 
-Parse each issue body for a "Blocked by" section containing `#<number>` references.
+Parse each issue body for a "Blocked by" section containing issue references (`#<number>` for GitHub/GitLab, beads ID for Beads).
 
 Sort issues so that issues with no unresolved blockers come first (topological sort). If a cycle is detected, warn the user and skip the cycle.
+
+<beads>Within the same dependency tier, prioritize by type: `bug` first, then `task`, then `chore`.</beads>
 
 For each issue, note the **Type** field (HITL or AFK) from the issue body if present.
 
@@ -40,7 +57,7 @@ Present the sorted order to the user for confirmation before proceeding.
 
 Ask once: **"Branch per issue or single branch?"**
 
-- **Branch per issue**: for each issue, create branch `issue-<number>/<slug>` from the current branch
+- **Branch per issue**: for each issue, create branch `issue-<id-or-number>/<slug>` from the current branch
 - **Single branch**: work on the current branch
 
 ### 4. Implementation loop
@@ -49,18 +66,20 @@ For each issue in topological order:
 
 #### 4a. Fetch full details
 
-- **GitHub**: `gh issue view <number>` (with `--json` for structured data)
-- **GitLab**: `glab issue view <number>`
+<beads>Run `bd show <id> --json` to get the complete issue body.</beads>
+<github>Run `gh issue view <number> --json number,title,body,labels`.</github>
+<gitlab>Run `glab issue view <number>`.</gitlab>
 
 #### 4b. Mark in progress
 
-- **GitHub**: `gh issue edit <number> --add-label "in-progress"`
-- **GitLab**: `glab issue update <number> --label "in-progress"`
+<beads>Run `bd update <id> --status in_progress`.</beads>
+<github>Run `gh issue edit <number> --add-label "in-progress"`.</github>
+<gitlab>Run `glab issue update <number> --label "in-progress"`.</gitlab>
 
 #### 4c. Create branch (if branch-per-issue)
 
 ```bash
-git checkout -b issue-<number>/<slug>
+git checkout -b issue-<id-or-number>/<slug>
 ```
 
 #### 4d. Explore codebase
@@ -93,20 +112,21 @@ Follow commit conventions:
 - Use conventional commits format: `type(scope): description`
 - Stage files by name — never `git add -A` or `git add .`
 - Pass commit message via HEREDOC
-- Include `Closes #<number>` or `Fixes #<number>` in the commit body
+- Reference the issue in the commit body — <github>include `Closes #<number>` or `Fixes #<number>`</github><gitlab>include `Closes #<number>`</gitlab><beads>include the Beads issue ID</beads>
 - Never include AI attribution in the commit message
 - Never use `--force`, `--no-verify`, or `--amend`
 
 #### 4g. Close the issue
 
-- **GitHub**: `gh issue close <number>`
-- **GitLab**: `glab issue update <number> --state close`
+<beads>Run `bd close <id>`.</beads>
+<github>Run `gh issue close <number>`.</github>
+<gitlab>Run `glab issue update <number> --state close`.</gitlab>
 
 #### 4h. Merge back (if branch-per-issue)
 
 ```bash
 git checkout <base-branch>
-git merge issue-<number>/<slug>
+git merge issue-<id-or-number>/<slug>
 ```
 
 #### 4i. Continue or pause
@@ -118,8 +138,8 @@ git merge issue-<number>/<slug>
 
 Print a table with three sections:
 
-| Status | # | Title | Commit |
-|--------|---|-------|--------|
+| Status | ID/# | Title | Commit |
+|--------|------|-------|--------|
 | Done | 1 | ... | abc1234 |
 | Skipped | 5 | ... | (blocked by #3) |
 | Failed | 8 | ... | (tests failed after retry) |

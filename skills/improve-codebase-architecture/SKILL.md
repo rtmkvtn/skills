@@ -1,6 +1,7 @@
 ---
 name: improve-codebase-architecture
-description: Explore a codebase to find opportunities for architectural improvement, focusing on making the codebase more testable by deepening shallow modules. Use when user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more AI-navigable.
+description: Explore a codebase to find opportunities for architectural improvement, focusing on making the codebase more testable by deepening shallow modules. Files an RFC issue using the backend (Beads, GitHub, or GitLab) recorded in CLAUDE.md. Use when user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more AI-navigable.
+permissions: Bash(bd:*), Bash(gh:*), Bash(glab:*), Bash(git:*)
 ---
 
 # Improve Codebase Architecture
@@ -10,6 +11,37 @@ Explore a codebase like an AI would, surface architectural friction, discover op
 A **deep module** (John Ousterhout, "A Philosophy of Software Design") has a small interface hiding a large implementation. Deep modules are more testable, more AI-navigable, and let you test at the boundary instead of inside.
 
 ## Process
+
+### 0. Resolve the issue-tracking backend
+
+<issue-tracker-resolution>
+Read `CLAUDE.md` at the repo root and look for:
+
+```
+## Issue Tracking
+
+Backend: <beads|github|gitlab>
+```
+
+- If found → use the backend named there. Use the matching `<beads>`, `<github>`, or `<gitlab>` blocks below for all issue commands.
+- If missing → auto-detect for this run:
+  1. `.beads/` exists → use `beads`
+  2. `git remote get-url origin` contains `github.com` → use `github`
+  3. `git remote get-url origin` contains `gitlab` → use `gitlab`
+  4. Otherwise → ask the user which to use
+  
+  Then tell the user: *"No issue tracking backend is set in CLAUDE.md. Using **\<backend\>** for this task. Run the `init-issue-tracker` skill to make this permanent."*
+
+If `beads` is the resolved backend, verify it is initialised by running `bd list`; if it fails, run `bd init`.
+</issue-tracker-resolution>
+
+### 0.5. Optional: pick up an existing issue
+
+If the user passes an existing issue reference, fetch it for context:
+
+<beads>If they pass a Beads issue ID, fetch it with `bd show <id>` and run `bd update <id> --status in_progress`.</beads>
+<github>If they pass an issue number or URL, fetch it with `gh issue view <number>`.</github>
+<gitlab>If they pass an issue number, fetch it with `glab issue view <number>`.</gitlab>
 
 ### 1. Explore the codebase
 
@@ -73,12 +105,10 @@ After comparing, give your own recommendation: which design you think is stronge
 
 ### 7. Create issue
 
-<platform-detection>
-Before running issue commands, detect the hosting platform:
-1. Run `git remote get-url origin`
-2. If URL contains "github.com" → use `gh` CLI
-3. If URL contains "gitlab" → use `glab` CLI
-4. Otherwise → ask the user which platform and CLI to use
-</platform-detection>
+Create a refactor RFC as an issue using the template in [REFERENCE.md](REFERENCE.md). Do NOT ask the user to review before creating — just create it and share the URL/ID.
 
-Create a refactor RFC as an issue using the platform CLI's issue create command. Use the template in [REFERENCE.md](REFERENCE.md). Do NOT ask the user to review before creating — just create it and share the URL.
+<beads>Run `bd create -t chore --stdin` with the body from the template.</beads>
+<github>Run `gh issue create --title "..." --body-file -` with the body from the template.</github>
+<gitlab>Run `glab issue create --title "..." --description-file -` with the body from the template.</gitlab>
+
+<beads>If you were working from an existing Beads issue, run `bd close <id>` after creating the RFC issue.</beads>

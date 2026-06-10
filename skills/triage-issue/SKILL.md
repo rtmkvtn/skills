@@ -1,17 +1,47 @@
 ---
 name: triage-issue
-description: Triage a bug or issue by exploring the codebase to find root cause, then create an issue with a TDD-based fix plan. Use when user reports a bug, wants to file an issue, mentions "triage", or wants to investigate and plan a fix for a problem.
+description: Triage a bug or issue by exploring the codebase to find root cause, then create an issue with a TDD-based fix plan. Backend (Beads, GitHub, or GitLab) is read from CLAUDE.md. Use when user reports a bug, wants to file an issue, mentions "triage", or wants to investigate and plan a fix for a problem.
+permissions: Bash(bd:*), Bash(gh:*), Bash(glab:*), Bash(git:*)
 ---
 
 # Triage Issue
 
-Investigate a reported problem, find its root cause, and create an issue with a TDD fix plan. This is a mostly hands-off workflow - minimize questions to the user.
+Investigate a reported problem, find its root cause, and create an issue with a TDD fix plan. This is a mostly hands-off workflow — minimize questions to the user.
 
 ## Process
+
+### 0. Resolve the issue-tracking backend
+
+<issue-tracker-resolution>
+Read `CLAUDE.md` at the repo root and look for:
+
+```
+## Issue Tracking
+
+Backend: <beads|github|gitlab>
+```
+
+- If found → use the backend named there. Use the matching `<beads>`, `<github>`, or `<gitlab>` blocks below for all issue commands.
+- If missing → auto-detect for this run:
+  1. `.beads/` exists → use `beads`
+  2. `git remote get-url origin` contains `github.com` → use `github`
+  3. `git remote get-url origin` contains `gitlab` → use `gitlab`
+  4. Otherwise → ask the user which to use
+  
+  Then tell the user: *"No issue tracking backend is set in CLAUDE.md. Using **\<backend\>** for this task. Run the `init-issue-tracker` skill to make this permanent."*
+
+If `beads` is the resolved backend, verify it is initialised by running `bd list`; if it fails, run `bd init`.
+</issue-tracker-resolution>
 
 ### 1. Capture the problem
 
 Get a brief description of the issue from the user. If they haven't provided one, ask ONE question: "What's the problem you're seeing?"
+
+If the user provides an existing issue reference:
+
+<beads>If they pass a Beads issue ID, fetch it with `bd show <id>` and run `bd update <id> --status in_progress`.</beads>
+<github>If they pass an issue number or URL, fetch it with `gh issue view <number>`.</github>
+<gitlab>If they pass an issue number, fetch it with `glab issue view <number>`.</gitlab>
 
 Do NOT ask follow-up questions yet. Start investigating immediately.
 
@@ -56,15 +86,11 @@ Rules:
 
 ### 5. Create the issue
 
-<platform-detection>
-Before running issue commands, detect the hosting platform:
-1. Run `git remote get-url origin`
-2. If URL contains "github.com" → use `gh` CLI
-3. If URL contains "gitlab" → use `glab` CLI
-4. Otherwise → ask the user which platform and CLI to use
-</platform-detection>
+Use the backend's create command. Do NOT ask the user to review before creating — just create it and share the URL/ID.
 
-Create an issue using the platform CLI's issue create command with the template below. Do NOT ask the user to review before creating - just create it and share the URL.
+<beads>Run `bd create -t bug --stdin` and pass the body below.</beads>
+<github>Run `gh issue create --title "..." --body-file -` and pass the body below.</github>
+<gitlab>Run `glab issue create --title "..." --description-file -` and pass the body below.</gitlab>
 
 <issue-template>
 
@@ -107,4 +133,6 @@ A numbered list of RED-GREEN cycles:
 
 </issue-template>
 
-After creating the issue, print the issue URL and a one-line summary of the root cause.
+After creating the issue, print the URL/ID and a one-line summary of the root cause.
+
+<beads>If you were working from an existing Beads issue, run `bd close <id>` after creating the triage issue.</beads>

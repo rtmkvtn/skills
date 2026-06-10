@@ -1,6 +1,7 @@
 ---
 name: prd-to-issues
-description: Break a PRD into independently-grabbable issues (GitHub or GitLab) using tracer-bullet vertical slices. Use when user wants to convert a PRD to issues, create implementation tickets, or break down a PRD into work items.
+description: Break a PRD into independently-grabbable issues using tracer-bullet vertical slices. Backend (Beads, GitHub, or GitLab) is read from CLAUDE.md. Use when user wants to convert a PRD to issues, create implementation tickets, or break down a PRD into work items.
+permissions: Bash(bd:*), Bash(gh:*), Bash(glab:*), Bash(git:*)
 ---
 
 # PRD to Issues
@@ -9,19 +10,38 @@ Break a PRD into independently-grabbable issues using vertical slices (tracer bu
 
 ## Process
 
-<platform-detection>
-Before running issue commands, detect the hosting platform:
-1. Run `git remote get-url origin`
-2. If URL contains "github.com" → use `gh` CLI
-3. If URL contains "gitlab" → use `glab` CLI
-4. Otherwise → ask the user which platform and CLI to use
-</platform-detection>
+### 0. Resolve the issue-tracking backend
+
+<issue-tracker-resolution>
+Read `CLAUDE.md` at the repo root and look for:
+
+```
+## Issue Tracking
+
+Backend: <beads|github|gitlab>
+```
+
+- If found → use the backend named there. Use the matching `<beads>`, `<github>`, or `<gitlab>` blocks below for all issue commands.
+- If missing → auto-detect for this run:
+  1. `.beads/` exists → use `beads`
+  2. `git remote get-url origin` contains `github.com` → use `github`
+  3. `git remote get-url origin` contains `gitlab` → use `gitlab`
+  4. Otherwise → ask the user which to use
+  
+  Then tell the user: *"No issue tracking backend is set in CLAUDE.md. Using **\<backend\>** for this task. Run the `init-issue-tracker` skill to make this permanent."*
+
+If `beads` is the resolved backend, verify it is initialised by running `bd list`; if it fails, run `bd init`.
+</issue-tracker-resolution>
 
 ### 1. Locate the PRD
 
-Ask the user for the PRD issue number (or URL).
+Ask the user for the PRD issue reference (number, URL, or Beads ID).
 
-If the PRD is not already in your context window, fetch it with the platform CLI's issue view command (with comments).
+If the PRD is not already in your context window, fetch it:
+
+<beads>Run `bd show <id> --json`. Run `bd update <id> --status in_progress` to mark the PRD as in progress.</beads>
+<github>Run `gh issue view <number> --comments`.</github>
+<gitlab>Run `glab issue view <number> --comments`.</gitlab>
 
 ### 2. Explore the codebase (optional)
 
@@ -59,14 +79,16 @@ Iterate until the user approves the breakdown.
 
 ### 5. Create the issues
 
-For each approved slice, create an issue using the platform CLI's issue create command. Use the issue body template below.
+For each approved slice, create an issue. Create them in dependency order (blockers first) so you can reference real IDs in the "Blocked by" field.
 
-Create issues in dependency order (blockers first) so you can reference real issue numbers in the "Blocked by" field.
+<beads>Run `bd create -t task --parent <prd-issue-id> --stdin` and pass the body below.</beads>
+<github>Run `gh issue create --title "..." --body-file -` with the body below. Reference the parent PRD as `#<prd-number>` in the body.</github>
+<gitlab>Run `glab issue create --title "..." --description-file -` with the body below. Reference the parent PRD as `#<prd-number>` in the body.</gitlab>
 
 <issue-template>
 ## Parent PRD
 
-#<prd-issue-number>
+<reference to PRD issue — #<number> for GitHub/GitLab, ID for Beads>
 
 ## What to build
 
@@ -80,7 +102,7 @@ A concise description of this vertical slice. Describe the end-to-end behavior, 
 
 ## Blocked by
 
-- Blocked by #<issue-number> (if any)
+- Blocked by <issue reference> (if any)
 
 Or "None - can start immediately" if no blockers.
 
@@ -93,4 +115,6 @@ Reference by number from the parent PRD:
 
 </issue-template>
 
-Do NOT close or modify the parent PRD issue.
+<beads>After all sub-issues are created, run `bd close <prd-id>` to close the PRD epic.</beads>
+<github>Do NOT close or modify the parent PRD issue.</github>
+<gitlab>Do NOT close or modify the parent PRD issue.</gitlab>
