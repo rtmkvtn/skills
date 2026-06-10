@@ -1,23 +1,24 @@
 import { mkdir, readFile, writeFile, rm, chmod } from "node:fs/promises";
 import { join, dirname } from "node:path";
-import { fetchDirectoryTree } from "./github.mjs";
+import { fetchSkillFiles } from "./github.mjs";
 
 const RAW_BASE = "https://raw.githubusercontent.com";
 
 /**
  * Install selected skills to the target directory.
+ * @param {Array<{category: string, dirName: string}>} selected
  */
-export async function installSkills(owner, repo, skillDirNames, skillsDir) {
+export async function installSkills(owner, repo, selected, skillsDir) {
   await mkdir(skillsDir, { recursive: true });
 
-  for (const dirName of skillDirNames) {
+  for (const { category, dirName } of selected) {
     const destDir = join(skillsDir, dirName);
 
     // Remove existing directory if present
     await rm(destDir, { recursive: true, force: true });
     await mkdir(destDir, { recursive: true });
 
-    const files = await fetchDirectoryTree(owner, repo, `skills/${dirName}`);
+    const files = await fetchSkillFiles(owner, repo, category, dirName);
 
     for (const file of files) {
       const destPath = join(destDir, file.relativePath);

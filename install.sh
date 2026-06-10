@@ -13,11 +13,26 @@ usage() {
 
 [[ $# -eq 0 ]] && usage
 
+# Find a skill directory by name (searches one level deep under skills/<category>/<name>)
+find_skill_src() {
+  local name="$1"
+  for category in "$REPO_DIR"/skills/*/; do
+    local candidate="$category$name"
+    if [[ -f "$candidate/SKILL.md" ]]; then
+      echo "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
 # Build list of skills to install
 skills=()
 if [[ "$1" == "--all" ]]; then
-  for dir in "$REPO_DIR"/skills/*/; do
-    [[ -f "$dir/SKILL.md" ]] && skills+=("$(basename "$dir")")
+  for category in "$REPO_DIR"/skills/*/; do
+    for dir in "$category"*/; do
+      [[ -f "$dir/SKILL.md" ]] && skills+=("$(basename "$dir")")
+    done
   done
 else
   skills=("$@")
@@ -26,10 +41,8 @@ fi
 mkdir -p "$SKILLS_DIR"
 
 for skill in "${skills[@]}"; do
-  src="$REPO_DIR/skills/$skill"
-
-  if [[ ! -f "$src/SKILL.md" ]]; then
-    echo "skip: $skill — no SKILL.md found in $src"
+  if ! src="$(find_skill_src "$skill")"; then
+    echo "skip: $skill — no SKILL.md found under $REPO_DIR/skills/*/$skill/"
     continue
   fi
 
